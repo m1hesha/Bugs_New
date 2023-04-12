@@ -23,12 +23,15 @@ class MainActivity : AppCompatActivity() {
                 handler!!.post { view!!.invalidate() }
             }
         }, 0, interval.toLong())
+        if (intent.hasExtra("score")) {
+            val score = intent.getIntExtra("score", 0)
+            showScoreDialog(score)
+        }
     }
 
-    fun finishGame() {
-        val builder = AlertDialog.Builder(this)
-            .setTitle("Игра окончена")
-            .setMessage("Ваши очки: $")
+    private fun showScoreDialog(score: Int){
+        val dialogBuilder = AlertDialog.Builder(this)
+        dialogBuilder.setMessage("Ваш счёт: $score")
             .setCancelable(false)
             .setPositiveButton("Новая игра") { dialog, id ->
                 val intent = baseContext.packageManager.getLaunchIntentForPackage(baseContext.packageName)
@@ -39,9 +42,12 @@ class MainActivity : AppCompatActivity() {
             .setNegativeButton("Выйти") { dialog, id ->
                 finish()
             }
-        val alert = builder.create()
+        val alert = dialogBuilder.create()
+        alert.setTitle("Результат")
         alert.show()
     }
+
+
 
     companion object {
         private const val interval = 1000 / 60 // 60 fps
